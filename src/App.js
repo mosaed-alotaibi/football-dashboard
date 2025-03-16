@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import './tailwind-classes.css';
 import TacticalAnalysisDashboard from './TacticalAnalysisDashboard';
 
 function App() {
