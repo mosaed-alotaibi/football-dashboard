@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
 import './tailwind-classes.css';
-import TacticalAnalysisDashboard from './TacticalAnalysisDashboard';
+import Dashboard from './components/Dashboard';
 
 function App() {
   return (
     <div className="App">
-      <TacticalAnalysisDashboard />
+      <Dashboard />
     </div>
   );
 }
