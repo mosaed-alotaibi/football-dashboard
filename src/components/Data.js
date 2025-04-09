@@ -1,4 +1,11 @@
 // Data.js - Central location for all sample data
+
+// Tactical Insights JavaScript object
+
+// Tactical Recommendations JavaScript object
+
+// Predicted Opposition Formation JavaScript object
+
 export const teamComparison = [
   { name: 'Possession', team: 58, opponent: 42 },
   { name: 'Shots', team: 14, opponent: 8 },
