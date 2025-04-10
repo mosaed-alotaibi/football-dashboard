@@ -1,4 +1,10 @@
 
+# Tools
+
+## Node.JS 18.20.7
+## n8n 1.86.1
+
+
 # Tactical Analyzer - Front-end
 
 
