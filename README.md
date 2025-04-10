@@ -42,7 +42,9 @@ Visit https://docs.n8n.io/workflows/create/ for a guide of creating workflow
 
 ### 3. Import Workflow file
 
-Import the workflow file "tactiView.json" to check the backend workflow
+Visit https://docs.n8n.io/workflows/export-import/
+
+>>> Import the workflow file "tactiView.json" (found at /src/data/tactiView.json) to check the backend workflow
 
 
 ### 4. Make secrets and API Keys (for Antrhopic, OpenAI, xAI, and/or DeepSeek)
@@ -53,4 +55,6 @@ Or https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-la
 
 ### 5. Test the flow by Postman
 
-Use postman to send test text data (real data) to check the flow
+Real Test data of Season 2019/2020 EPL Premier League found in /src/data/_LATEST_DATA_EPL_League_data.txt
+
+Use postman to send test text test data to check the flow
