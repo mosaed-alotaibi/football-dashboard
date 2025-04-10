@@ -1,0 +1,434 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "binaryPropertyName": "={{ Object.keys($binary)[0] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        720,
+        260
+      ],
+      "id": "2f8da892-15cf-4a78-827e-c640dd57420e",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "technical_analysis",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -220,
+        340
+      ],
+      "id": "3cac8376-c1db-4875-9d60-6aa5bebd5f2a",
+      "name": "Webhook",
+      "webhookId": "14908ba5-dd85-4346-a5ef-5d0b47b52bde"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1860,
+        240
+      ],
+      "id": "8027ff89-ef8e-42ae-a5d5-2062e3e0dd38",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst formattedItems = items.map((item) => {\n  const formattedOutput = item.json.output\n    .replace(/\\n/g, \"\")\n    .replace(/\\\\/g, \"\")\n    .replace(/`/g, \"\")\n    .replace(\"json\", \"\");\n  return { output: JSON.parse(formattedOutput) };\n});\nreturn formattedItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        220
+      ],
+      "id": "c78acddd-a68f-4bf5-ba73-ba19464702a7",
+      "name": "Preparing output"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.reduce((acc, item) => {\n  const binaryKeys = Object.keys(item.binary || {});\n  binaryKeys.forEach(key => {\n      acc.push({\n        json: {},\n        binary: {\n          [key]: item.binary[key]\n        }\n      });\n  });\n  return acc;\n}, []);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        380
+      ],
+      "id": "493cc8c8-d6a2-4317-aa52-b32102d72830",
+      "name": "Rename input files"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n     const binaryKeys = Object.keys(item.binary);\n     return binaryKeys.map(key => {\n       return {\n         json: {},\n         binary: {\n           [key]: item.binary[key]\n         }\n       };\n     });\n   }).flat();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        180,
+        400
+      ],
+      "id": "6c1861b6-19c4-4f2e-bd28-434fbd0cf07b",
+      "name": "Validate Files"
+    },
+    {
+      "parameters": {
+        "content": "# Files and Data Preparation",
+        "height": 760,
+        "width": 1040
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "49727a11-8476-47b9-8210-f7375cbe64ce",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Matches and Data Extraction and Filtering",
+        "height": 760,
+        "width": 400,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2460,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "fcf163c9-24f6-49f7-b867-bca447ca993e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# Prepare AI Output for the AI Agent",
+        "height": 760,
+        "width": 460,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2940,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "6113eb5e-a31a-4697-8c79-4ced6c049cf7",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# Tactical Analysis",
+        "height": 760,
+        "width": 380,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1060,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "7404d1f9-9418-4f2d-aba3-30ff6d93c585",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "# Prepare Output",
+        "height": 760,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1460,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "0e17db1b-61c9-45cd-9bc5-7081d9b01d39",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-3-7-sonnet-20250219",
+          "cachedResultName": "Claude 3.7 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        2520,
+        580
+      ],
+      "id": "70a52a82-276a-4808-8b1f-027b8ef7b6f4",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "LbHP1ObImIMFSb5r",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Take the JSON input and Interpret as\n{{ $json['data'].data}}",
+        "options": {
+          "systemMessage": "=You are an AI-powered Football Tactical analyzer and Coach assistant.\nYour role is to analyze all given Football matches and league data in JSON formtat (analyze the JS data and exract what you can extract) and give insights to Liverpool team for their next match. And give us the following things based on the data:\n- General information and predictions\n- Teams Comparison\n... And so on for the remaining data as in the JSON below\n\n\nAlways, in below JSON Replace opponent_name placeholder by the opponent name, ... by predicted text, ? by exact values from given text, x, y, z, etc. by predicted but realistic values (like in the context of x-y-z-w in formation, it should represent a formation of 10 players!) and whichever placeholder replace it by correct, realistic, and meaningful value. Also, a value from the enum (Low,Medium,High,Very High) must be chosen out of prediction.\n\n\nYour response should only be in json format such as below (output nothing but JSON), but with correct mappings and values, thus, values of JSON attributes must be replaced by correct and/or predicted realistic numbers and values based on the given input files, AND Ensure full JSON format is returned FULL TEXT with no truncations:\n\n{\n  \"metadata\": {\n    \"match\": {\n      \"homeTeam\": \"Liverpool\",\n      \"awayTeam\": \"?\", \n      \"date\": \"?\", \n      \"competition\": \"?\", \n      \"venue\": \"? \n    },\n    \"analysis\": {\n      \"winProbability\": x, \n      \"drawProbability\": x, \n      \"lossProbability\": x, \n      \"timestamp\": \"?\", \n      \"version\": \"1.0\"\n    }\n  },\n  \"teamComparison\": [\n    { \"name\": \"Possession\", \"Liverpool\": x, \"opponent_name\": y }, \n    { \"name\": \"Shots\", \"Liverpool\": x, \"opponent_name\": y }, \n    { \"name\": \"Shots on Target\", \"Liverpool\": x, \"opponent_name\": y }, \n    { \"name\": \"Corners\", \"Liverpool\": x, \"opponent_name\": y }, \n    { \"name\": \"Fouls\", \"Liverpool\": x, \"opponent_name\": y } \n  ],\n  \"pressureData\": [\n    { \"minute\": \"0-15\", \"intensity\": x, \"recoveries\": y },\n    { \"minute\": \"16-30\", \"intensity\": x, \"recoveries\": y },\n    { \"minute\": \"31-45\", \"intensity\": x, \"recoveries\": y },\n    { \"minute\": \"46-60\", \"intensity\": x, \"recoveries\": y },\n    { \"minute\": \"61-75\", \"intensity\": x, \"recoveries\": y },\n    { \"minute\": \"76-90\", \"intensity\": x, \"recoveries\": y }\n  ],\n  \"passingNetworkData\": [\n    { \"name\": \"GK\", \"passes\": x, \"accuracy\": y },\n    { \"name\": \"RB\", \"passes\": x, \"accuracy\": y },\n    { \"name\": \"CB1\", \"passes\": x, \"accuracy\": y },\n    { \"name\": \"CB2\", \"passes\": x, \"accuracy\": y },\n    { \"name\": \"LB\", \"passes\": x, \"accuracy\": y },\n    { \"name\": \"CDM\", \"passes\": x, \"accuracy\": y },\n    { \"name\": \"CM1\", \"passes\": x, \"accuracy\": y },\n    { \"name\": \"CM2\", \"passes\": x, \"accuracy\": y },\n    { \"name\": \"RW\", \"passes\": x, \"accuracy\": y },\n    { \"name\": \"ST\", \"passes\": x, \"accuracy\": y },\n    { \"name\": \"LW\", \"passes\": x, \"accuracy\": y }\n  ],\n  \"opponentWeaknesses\": [\n    { \"name\": \"High Press\", \"value\": x },\n    { \"name\": \"Defending Wide Areas\", \"value\": x },\n    { \"name\": \"Aerial Duels\", \"value\": x },\n    { \"name\": \"Transition Defense\", \"value\": x },\n    { \"name\": \"Defending Set Pieces\", \"value\": x }\n  ],\n  \"predictedFormations\": [\n// All probabilities add up to 100\n    { \"name\": \"x-y-z\", \"probability\": h },\n    { \"name\": \"x-y-z-w\", \"probability\": h },\n    { \"name\": \"x-y-z\", \"probability\": h }\n  ],\n  \"radarData\": [\n    { \"subject\": \"Attack\", \"A\": x, \"B\": y, \"fullMark\": 100 },\n    { \"subject\": \"Defense\", \"A\": x, \"B\": y, \"fullMark\": 100 },\n    { \"subject\": \"Possession\", \"A\": x, \"B\": y, \"fullMark\": 100 },\n    { \"subject\": \"Physical\", \"A\": x, \"B\": y, \"fullMark\": 100 },\n    { \"subject\": \"Set Pieces\", \"A\": x, \"B\": y, \"fullMark\": 100 },\n    { \"subject\": \"Counter\", \"A\": x, \"B\": y, \"fullMark\": 100 }\n  ],\n  \"scenarioAnalysis\": [\n// In every object winProb, drawProb, and lossProb all add up to 100, predict  values and let every object add up to 100 (like High Press add up 100, and so on...)\n    { \"scenario\": \"High Press\", \"winProb\": x, \"drawProb\": y, \"lossProb\": z },\n    { \"scenario\": \"Low Block\", \"winProb\": x, \"drawProb\": y, \"lossProb\": z },\n    { \"scenario\": \"Possession\", \"winProb\": x, \"drawProb\": y, \"lossProb\": z },\n    { \"scenario\": \"Counter Attack\", \"winProb\": x, \"drawProb\": y, \"lossProb\": z }\n  ],\n  \"tacticalInsights\": {\n    \"strengths\": [\n      \"...\",\n      \"...\",\n      \"...\"\n    ],\n    \"weaknesses\": [\n      \"...\",\n      \"...\",\n      \"...\"\n    ],\n    \"keyPlayerImpact\": [\n      \"...\",\n      \"...\",\n      \"...\"\n    ]\n  },\n  \"tacticalRecommendations\": {\n    \"formationSuggestion\": \"x-y-z\",\n    \"pressingStrategy\": \"...\",\n    \"attackingApproach\": [\n      \"...\",\n      \"...\",\n      \"...\"\n    ],\n    \"defensiveApproach\": [\n      \"...\",\n      \"...\",\n      \"...\"\n    ],\n    \"setPlayStrategies\": [\n      \"...\",\n      \"...\",\n      \"...\"\n    ]\n  },\n  \"predictedOppositionFormation\": {\n    \"formation\": \"x-y-z\",\n    \"likelyStarters\": [\n      { \"position\": \"GK\", \"player\": \"?\", \"threatLevel\": \"(Low,Medium,High,Very High)\" },\n      { \"position\": \"RB\", \"player\": \"?\", \"threatLevel\": \"(Low,Medium,High,Very High)\" },\n      { \"position\": \"CB\", \"player\": \"?\", \"threatLevel\": \"(Low,Medium,High,Very High)\" },\n      { \"position\": \"CB\", \"player\": \"?\", \"threatLevel\": \"(Low,Medium,High,Very High)\" },\n      { \"position\": \"LB\", \"player\": \"?\", \"threatLevel\": \"(Low,Medium,High,Very High)\" },\n      { \"position\": \"RM\", \"player\": \"?\", \"threatLevel\": \"(Low,Medium,High,Very High)\" },\n      { \"position\": \"CM\", \"player\": \"?\", \"threatLevel\": \"(Low,Medium,High,Very High)\" },\n      { \"position\": \"CM\", \"player\": \"?\", \"threatLevel\": \"(Low,Medium,High,Very High)\" },\n      { \"position\": \"LM\", \"player\": \"?\", \"threatLevel\": \"(Low,Medium,High,Very High)\" },\n      { \"position\": \"ST\", \"player\": \"?\", \"threatLevel\": \"(Low,Medium,High,Very High)\" },\n      { \"position\": \"ST\", \"player\": \"?\", \"threatLevel\": \"(Low,Medium,High,Very High)\" }\n    ],\n    \"keyTactics\": [\n      \"...\",\n      \"...\",\n      \"...\",\n      \"...\",\n      \"...\"\n    ]\n  }\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1140,
+        220
+      ],
+      "id": "700de9dd-bd03-4509-a0ab-3fb775326401",
+      "name": "Tactical Analyzer"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Text\nRFP:\n```{{ $json['result'].item1}} ```\n ",
+        "options": {
+          "systemMessage": "=You are an AI-powered proposal evaluation assistant.\nYour role is to analyze Requests for Proposals (RFPs) and obtain the evaluation criteria\n\nInstructions:\nExtract Evaluation Criteria from the RFP\n\nIdentify all evaluation criteria specified in the RFP with its weights and summary of the requirements.\nEnsure criteria cover relevant aspects such as technical compliance, security, cost, and implementation plan.\n\n\nyour resopnse should be in json format such as \n\n{\"criteria 1\" : { \"requirement\" : \" this is the requirement for the first criteria\", \"weight\":\"15%\"},\n\"critiera 2\" : { \"requirement\" : \" this is the requirement for the second criteria\", \"weight\":\"15%\"},}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        2500,
+        400
+      ],
+      "id": "a8632197-44d6-4e44-86e3-33fb5a2c1c5b",
+      "name": "Filterer & Extracting AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        940,
+        880
+      ],
+      "id": "501e85af-7497-4a59-a11d-4326258692f3",
+      "name": "Tactical Analysis AI Agent",
+      "credentials": {
+        "openAiApi": {
+          "id": "PAdIe9TLhfXY4xGz",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-7-sonnet-20250219",
+          "mode": "list",
+          "cachedResultName": "Claude 3.7 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        1240,
+        780
+      ],
+      "id": "df6f319f-c56b-45e8-909a-fd80b37f6aa5",
+      "name": "Tactical Analysis AI Agent1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "sTgmL0qqLiAn9xjF",
+          "name": "Anthropic account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "grok-3-beta",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatXAiGrok",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        820
+      ],
+      "id": "a2010026-779d-4aba-8c34-16ecf2dd614b",
+      "name": "xAI Grok Chat Model",
+      "credentials": {
+        "xAiApi": {
+          "id": "gbDVeuO0SUyZUFzJ",
+          "name": "xAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        420
+      ],
+      "id": "76aacdb8-07a3-4896-8086-65ee48f4d33e",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "pFOBbMaZwuMj1l4p",
+          "name": "DeepSeek account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Tactical Analyzer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing output": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename input files": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Files": {
+      "main": [
+        [
+          {
+            "node": "Rename input files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Filterer & Extracting AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tactical Analyzer": {
+      "main": [
+        [
+          {
+            "node": "Preparing output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Tactical Analyzer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tactical Analysis AI Agent1": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Tactical Analysis AI Agent": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "xAI Grok Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7784703a-7460-48b0-a44c-01c0346ec1cd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2de25d70190fc9f224410999c7074d35049edb77fd0e3742742568da5db4d5c0"
+  },
+  "id": "QrqQryrWEuu10XOF",
+  "tags": []
+}

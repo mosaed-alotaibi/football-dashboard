@@ -9,7 +9,7 @@ const Header = () => {
           <div className="w-10 h-10 bg-white rounded-full mr-3 flex items-center justify-center overflow-hidden">
             <img 
               src="/logo.png" 
-              alt="AI Sky League" 
+              alt="SCAI League" 
               className="w-8 h-8"
               onError={(e) => {
                 e.target.onerror = null;
@@ -18,8 +18,8 @@ const Header = () => {
             />
           </div>
           <div>
-            <h1 className="text-lg md:text-xl lg:text-2xl font-bold">AI Sky League</h1>
-            <p className="text-xs md:text-sm opacity-80">Tactical Analysis Platform</p>
+            <h1 className="text-lg md:text-xl lg:text-2xl font-bold">SCAI League</h1>
+            <p className="text-xs md:text-sm opacity-80">Tactical Analysis AI Assistant</p>
           </div>
         </div>
         <div className="flex items-center text-right">
