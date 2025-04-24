@@ -1,11 +1,12 @@
 import React from 'react';
+import { metadata } from './Data';
 
 const Header = () => {
   return (
     <div className="bg-blue-800 text-white shadow-md">
       <div className="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
         <div className="flex items-center mb-2 md:mb-0">
-          {/* Logo Placeholder - Replace with your actual logo */}
+          {/* Logo Placeholder */}
           <div className="w-10 h-10 bg-white rounded-full mr-3 flex items-center justify-center overflow-hidden">
             <img 
               src="/logo.png" 
@@ -24,9 +25,9 @@ const Header = () => {
         </div>
         <div className="flex items-center text-right">
           <div className="text-right">
-            <p className="text-xs md:text-sm font-medium">Next Match:</p>
-            <p className="text-xs md:text-sm font-bold">Al-Hilal vs Al-Nassr</p>
-            <p className="text-xs opacity-80">March 14, 2025</p>
+            <p className="text-xs md:text-sm font-medium">{metadata.match.competition}</p>
+            <p className="text-xs md:text-sm font-bold">{metadata.match.homeTeam} vs {metadata.match.awayTeam}</p>
+            <p className="text-xs opacity-80">{metadata.match.date} | {metadata.match.venue}</p>
           </div>
         </div>
       </div>

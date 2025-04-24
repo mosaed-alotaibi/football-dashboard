@@ -5,7 +5,7 @@ import {
   PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
 import { 
-  teamComparison, pressureData, passingNetworkData, radarData 
+  teamComparison, pressureData, passingNetworkData, radarData, tacticalInsights
 } from './Data';
 
 const TacticalAnalysis = ({ windowWidth }) => {
@@ -13,33 +13,39 @@ const TacticalAnalysis = ({ windowWidth }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-3 md:p-4 mb-4">
-      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Tactical Analysis</h2>
+      <h2 className="text-base md:text-lg font-semibold mb-2 md:mb-3">Tactical Analysis</h2>
       
       {/* Tab navigation */}
-      <div className="flex flex-wrap border-b mb-4">
+      <div className="flex flex-wrap border-b mb-4 overflow-x-auto">
         <button 
-          className={`text-xs md:text-sm px-2 md:px-4 py-2 mr-2 mb-2 ${activeTab === 'overview' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-600'}`}
+          className={`text-xs md:text-sm px-2 md:px-4 py-2 mr-2 mb-1 ${activeTab === 'overview' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-600'}`}
           onClick={() => setActiveTab('overview')}
         >
           Team Comparison
         </button>
         <button 
-          className={`text-xs md:text-sm px-2 md:px-4 py-2 mr-2 mb-2 ${activeTab === 'pressure' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-600'}`}
+          className={`text-xs md:text-sm px-2 md:px-4 py-2 mr-2 mb-1 ${activeTab === 'pressure' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-600'}`}
           onClick={() => setActiveTab('pressure')}
         >
           Pressure Analysis
         </button>
         <button 
-          className={`text-xs md:text-sm px-2 md:px-4 py-2 mr-2 mb-2 ${activeTab === 'passing' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-600'}`}
+          className={`text-xs md:text-sm px-2 md:px-4 py-2 mr-2 mb-1 ${activeTab === 'passing' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-600'}`}
           onClick={() => setActiveTab('passing')}
         >
           Passing Network
         </button>
         <button 
-          className={`text-xs md:text-sm px-2 md:px-4 py-2 mr-2 mb-2 ${activeTab === 'weaknesses' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-600'}`}
-          onClick={() => setActiveTab('weaknesses')}
+          className={`text-xs md:text-sm px-2 md:px-4 py-2 mr-2 mb-1 ${activeTab === 'radar' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-600'}`}
+          onClick={() => setActiveTab('radar')}
         >
-          Opponent Weaknesses
+          Team Strengths
+        </button>
+        <button 
+          className={`text-xs md:text-sm px-2 md:px-4 py-2 mr-2 mb-1 ${activeTab === 'insights' ? 'text-blue-600 border-b-2 border-blue-600 font-medium' : 'text-gray-600'}`}
+          onClick={() => setActiveTab('insights')}
+        >
+          Detailed Insights
         </button>
       </div>
       
@@ -83,7 +89,7 @@ const TacticalAnalysis = ({ windowWidth }) => {
               <YAxis tick={{fontSize: windowWidth < 480 ? 8 : (windowWidth < 640 ? 10 : 12)}} />
               <Tooltip />
               <Legend wrapperStyle={{fontSize: windowWidth < 480 ? 8 : (windowWidth < 640 ? 10 : 12)}} />
-              <Line type="monotone" dataKey="intensity" name="Pressure Intensity" stroke="#8884d8" />
+              <Line type="monotone" dataKey="intensity" name="Pressure Intensity %" stroke="#8884d8" activeDot={{ r: 8 }} />
               <Line type="monotone" dataKey="recoveries" name="Ball Recoveries" stroke="#82ca9d" />
             </LineChart>
           </ResponsiveContainer>
@@ -111,7 +117,7 @@ const TacticalAnalysis = ({ windowWidth }) => {
           </ResponsiveContainer>
         )}
         
-        {activeTab === 'weaknesses' && (
+        {activeTab === 'radar' && (
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart 
               outerRadius={windowWidth < 480 ? 60 : (windowWidth < 640 ? 70 : 90)} 
@@ -126,6 +132,37 @@ const TacticalAnalysis = ({ windowWidth }) => {
               <Tooltip />
             </RadarChart>
           </ResponsiveContainer>
+        )}
+        
+        {activeTab === 'insights' && (
+          <div className="overflow-y-auto h-full p-2">
+            <div className="mb-3">
+              <h3 className="text-sm font-semibold mb-1">Team Strengths</h3>
+              <ul className="text-xs list-disc pl-4">
+                {tacticalInsights.strengths.map((item, index) => (
+                  <li key={index} className="mb-1">{item}</li>
+                ))}
+              </ul>
+            </div>
+            
+            <div className="mb-3">
+              <h3 className="text-sm font-semibold mb-1">Team Weaknesses</h3>
+              <ul className="text-xs list-disc pl-4">
+                {tacticalInsights.weaknesses.map((item, index) => (
+                  <li key={index} className="mb-1">{item}</li>
+                ))}
+              </ul>
+            </div>
+            
+            <div className="mb-3">
+              <h3 className="text-sm font-semibold mb-1">Key Player Impact</h3>
+              <ul className="text-xs list-disc pl-4">
+                {tacticalInsights.keyPlayerImpact.map((item, index) => (
+                  <li key={index} className="mb-1">{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
         )}
       </div>
     </div>
