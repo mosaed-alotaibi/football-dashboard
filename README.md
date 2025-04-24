@@ -50,7 +50,7 @@ Visit https://docs.n8n.io/workflows/create/ for a guide of creating workflow
 
 Visit https://docs.n8n.io/workflows/export-import/
 
->>> Import the workflow file "tactiView.json" (found at /src/data/tactiView.json) to check the backend workflow
+>>> Import the workflow file "workflow_json_file.json" (found at /src/data/workflow_json_file.json) to check the backend workflow
 
 
 ### 4. Make secrets and API Keys (for Antrhopic, OpenAI, xAI, and/or DeepSeek)
