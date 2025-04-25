@@ -1,0 +1,194 @@
+// Home.jsx
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { fetchTeams, fetchRecentMatches } from './services/apiService';
+
+const Home = () => {
+  const [teams, setTeams] = useState([]);
+  const [recentMatches, setRecentMatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedTeams, setSelectedTeams] = useState({ homeTeam: '', awayTeam: '' });
+  
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        setLoading(true);
+        // Fetch teams and recent matches in parallel
+        const [teamsData, matchesData] = await Promise.all([
+          fetchTeams(),
+          fetchRecentMatches()
+        ]);
+        
+        setTeams(teamsData);
+        setRecentMatches(matchesData);
+        setError(null);
+      } catch (err) {
+        console.error('Failed to load initial data:', err);
+        setError('Failed to load teams and matches. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadInitialData();
+  }, []);
+
+  const handleTeamChange = (event, teamType) => {
+    setSelectedTeams({
+      ...selectedTeams,
+      [teamType]: event.target.value
+    });
+  };
+
+  const handleAnalyzeMatch = (e) => {
+    e.preventDefault();
+    
+    if (!selectedTeams.homeTeam || !selectedTeams.awayTeam) {
+      setError('Please select both teams for analysis');
+      return;
+    }
+    
+    if (selectedTeams.homeTeam === selectedTeams.awayTeam) {
+      setError('Please select different teams for home and away');
+      return;
+    }
+    
+    // Navigate to dashboard with the selected teams as query parameters
+    navigate(`/dashboard?homeTeam=${encodeURIComponent(selectedTeams.homeTeam)}&awayTeam=${encodeURIComponent(selectedTeams.awayTeam)}`);
+  };
+
+  const handleRecentMatchClick = (match) => {
+    navigate(`/dashboard?homeTeam=${encodeURIComponent(match.homeTeam)}&awayTeam=${encodeURIComponent(match.awayTeam)}`);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading SCAI League data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-gray-100 min-h-screen">
+      {/* Header */}
+      <div className="bg-blue-800 text-white shadow-md">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center mb-2 md:mb-0">
+            <div className="w-10 h-10 bg-white rounded-full mr-3 flex items-center justify-center overflow-hidden">
+              <img 
+                src="/logo.png" 
+                alt="SCAI League" 
+                className="w-8 h-8"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='32' height='32'%3E%3Cpath fill='%232563eb' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3Cpath fill='%232563eb' d='M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z'/%3E%3C/svg%3E";
+                }}
+              />
+            </div>
+            <div>
+              <h1 className="text-lg md:text-xl lg:text-2xl font-bold">SCAI League</h1>
+              <p className="text-xs md:text-sm opacity-80">Tactical Analysis AI Assistant</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto p-3 md:p-4">
+        {/* Error message */}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <p>{error}</p>
+          </div>
+        )}
+
+        {/* Team Selection Form */}
+        <div className="bg-white rounded-lg shadow-md p-3 md:p-4 mb-4">
+          <h2 className="text-base md:text-lg font-semibold mb-2 md:mb-3">Create New Match Analysis</h2>
+          <form onSubmit={handleAnalyzeMatch}>
+            <div className="flex flex-wrap -mx-2">
+              <div className="w-full md:w-1/2 px-2 mb-3">
+                <label htmlFor="homeTeam" className="block text-sm font-medium mb-1">Home Team</label>
+                <select 
+                  id="homeTeam"
+                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={selectedTeams.homeTeam}
+                  onChange={(e) => handleTeamChange(e, 'homeTeam')}
+                  required
+                >
+                  <option value="">Select Home Team</option>
+                  {teams.map(team => (
+                    <option key={`home-${team.id}`} value={team.name}>
+                      {team.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="w-full md:w-1/2 px-2 mb-3">
+                <label htmlFor="awayTeam" className="block text-sm font-medium mb-1">Away Team</label>
+                <select 
+                  id="awayTeam"
+                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={selectedTeams.awayTeam}
+                  onChange={(e) => handleTeamChange(e, 'awayTeam')}
+                  required
+                >
+                  <option value="">Select Away Team</option>
+                  {teams.map(team => (
+                    <option key={`away-${team.id}`} value={team.name}>
+                      {team.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex justify-center mt-2">
+              <button 
+                type="submit" 
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-200"
+              >
+                Generate Match Analysis
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Recent Matches */}
+        <div className="bg-white rounded-lg shadow-md p-3 md:p-4">
+          <h2 className="text-base md:text-lg font-semibold mb-2 md:mb-3">Recent Matches</h2>
+          {recentMatches.length === 0 ? (
+            <p className="text-gray-500 text-center py-4">No recent matches available</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {recentMatches.map((match) => (
+                <div 
+                  key={match.id} 
+                  className="border rounded p-3 cursor-pointer hover:bg-gray-50 transition duration-200"
+                  onClick={() => handleRecentMatchClick(match)}
+                >
+                  <div className="text-sm text-gray-500 mb-1">{match.date} | {match.competition}</div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">{match.homeTeam}</span>
+                    <span className="text-xs bg-gray-200 px-2 py-1 rounded">vs</span>
+                    <span className="font-medium">{match.awayTeam}</span>
+                  </div>
+                  <div className="text-xs text-right mt-2 text-blue-600">
+                    View Analysis →
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Home;

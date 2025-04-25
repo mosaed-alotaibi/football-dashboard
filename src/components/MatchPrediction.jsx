@@ -1,8 +1,14 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import { predictedFormations, COLORS, metadata, tacticalInsights, pressureData } from './Data';
 
-const MatchPrediction = ({ windowWidth }) => {
+const MatchPrediction = ({ 
+  windowWidth, 
+  metadata, 
+  predictedFormations, 
+  COLORS, 
+  tacticalInsights,
+  pressureData 
+}) => {
   // Convert win/draw/loss probabilities to pie chart data
   const matchProbabilityData = [
     { name: 'Win', value: metadata.analysis.winProbability, color: '#4CAF50' },

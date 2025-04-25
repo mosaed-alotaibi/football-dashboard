@@ -1,8 +1,7 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { scenarioAnalysis, getChartHeight } from './Data';
 
-const WhatIfAnalysis = ({ windowWidth }) => {
+const WhatIfAnalysis = ({ windowWidth, scenarioAnalysis, getChartHeight }) => {
   return (
     <div className="bg-white rounded-lg shadow-md p-3 md:p-4 h-full">
       <h2 className="text-base md:text-lg font-semibold mb-2 md:mb-3">What-If Scenario Analysis</h2>

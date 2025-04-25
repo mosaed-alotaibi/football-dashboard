@@ -1,7 +1,6 @@
 import React from 'react';
-import { metadata } from './Data';
 
-const Header = () => {
+const Header = ({ metadata }) => {
   return (
     <div className="bg-blue-800 text-white shadow-md">
       <div className="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
