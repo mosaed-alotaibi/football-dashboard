@@ -1,14 +1,24 @@
 // Home.jsx
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { fetchTeams, fetchRecentMatches } from './services/apiService';
+import { useNavigate } from 'react-router-dom';
+import { fetchTeams, fetchRecentMatches, uploadFilesAndGetAnalysis } from './services/apiService';
+import { downloadSampleFile } from './services/FileProcessingUtil';
 
 const Home = () => {
+  // State for teams and recent matches
   const [teams, setTeams] = useState([]);
   const [recentMatches, setRecentMatches] = useState([]);
+  
+  // State for loading and error handling
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // State for form data
   const [selectedTeams, setSelectedTeams] = useState({ homeTeam: '', awayTeam: '' });
+  const [selectedFiles, setSelectedFiles] = useState({ teamStatsFile: null, matchAnalysisFile: null });
+  
+  // State for upload progress
+  const [uploading, setUploading] = useState(false);
   
   const navigate = useNavigate();
 
@@ -43,9 +53,17 @@ const Home = () => {
     });
   };
 
-  const handleAnalyzeMatch = (e) => {
+  const handleFileChange = (event, fileType) => {
+    setSelectedFiles({
+      ...selectedFiles,
+      [fileType]: event.target.files[0]
+    });
+  };
+
+  const handleAnalyzeMatch = async (e) => {
     e.preventDefault();
     
+    // Validate team selection
     if (!selectedTeams.homeTeam || !selectedTeams.awayTeam) {
       setError('Please select both teams for analysis');
       return;
@@ -56,12 +74,40 @@ const Home = () => {
       return;
     }
     
-    // Navigate to dashboard with the selected teams as query parameters
-    navigate(`/dashboard?homeTeam=${encodeURIComponent(selectedTeams.homeTeam)}&awayTeam=${encodeURIComponent(selectedTeams.awayTeam)}`);
+    // Validate file uploads
+    if (!selectedFiles.teamStatsFile || !selectedFiles.matchAnalysisFile) {
+      setError('Please upload both required files for analysis');
+      return;
+    }
+    
+    try {
+      setUploading(true);
+      setError(null);
+      
+      // Upload files and get analysis data
+      await uploadFilesAndGetAnalysis(
+        selectedTeams.homeTeam,
+        selectedTeams.awayTeam,
+        selectedFiles.teamStatsFile,
+        selectedFiles.matchAnalysisFile
+      );
+      
+      // Navigate to dashboard with the selected teams as query parameters
+      navigate(`/dashboard?homeTeam=${encodeURIComponent(selectedTeams.homeTeam)}&awayTeam=${encodeURIComponent(selectedTeams.awayTeam)}`);
+    } catch (err) {
+      console.error('Failed to upload files and get analysis:', err);
+      setError('Failed to process files. Please check file format and try again.');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleRecentMatchClick = (match) => {
     navigate(`/dashboard?homeTeam=${encodeURIComponent(match.homeTeam)}&awayTeam=${encodeURIComponent(match.awayTeam)}`);
+  };
+
+  const handleDownloadSample = () => {
+    downloadSampleFile();
   };
 
   if (loading) {
@@ -148,12 +194,75 @@ const Home = () => {
                 </select>
               </div>
             </div>
+            
+            {/* File upload section */}
+            <div className="mb-3">
+              <div className="flex flex-wrap justify-between items-center mb-2">
+                <h3 className="text-sm font-medium">Upload Match Data Files</h3>
+                <button
+                  type="button"
+                  onClick={handleDownloadSample}
+                  className="text-blue-600 hover:text-blue-800 text-xs flex items-center"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                  </svg>
+                  Download Sample File
+                </button>
+              </div>
+              <div className="flex flex-wrap -mx-2">
+                <div className="w-full md:w-1/2 px-2 mb-3">
+                  <label htmlFor="teamStatsFile" className="block text-sm font-medium mb-1">Team Statistics File</label>
+                  <input
+                    type="file"
+                    id="teamStatsFile"
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    onChange={(e) => handleFileChange(e, 'teamStatsFile')}
+                    accept=".json,.txt,.csv"
+                    required
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Upload team statistics file (.json, .txt, .csv)
+                  </p>
+                </div>
+                <div className="w-full md:w-1/2 px-2 mb-3">
+                  <label htmlFor="matchAnalysisFile" className="block text-sm font-medium mb-1">Match Analysis File</label>
+                  <input
+                    type="file"
+                    id="matchAnalysisFile"
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    onChange={(e) => handleFileChange(e, 'matchAnalysisFile')}
+                    accept=".json,.txt,.csv"
+                    required
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Upload match analysis file (.json, .txt, .csv)
+                  </p>
+                </div>
+              </div>
+              <div className="bg-blue-50 p-3 rounded-md text-xs text-blue-800 mb-3">
+                <p className="font-medium mb-1">File Format Information</p>
+                <p>The analysis requires two JSON files:</p>
+                <ol className="list-decimal ml-4 mt-1 space-y-1">
+                  <li>Team Statistics: Contains player and team performance data</li>
+                  <li>Match Analysis: Contains tactical and strategic information</li>
+                </ol>
+                <p className="mt-1">Use the "Download Sample File" button above to get a template of the expected format.</p>
+              </div>
+            </div>
+            
             <div className="flex justify-center mt-2">
               <button 
                 type="submit" 
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-200"
+                className={`${uploading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} text-white font-medium py-2 px-4 rounded transition duration-200 flex items-center`}
+                disabled={uploading}
               >
-                Generate Match Analysis
+                {uploading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Processing Files...
+                  </>
+                ) : 'Generate Match Analysis'}
               </button>
             </div>
           </form>

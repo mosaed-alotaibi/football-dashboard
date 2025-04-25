@@ -91,9 +91,21 @@ const Dashboard = () => {
     return null;
   }
   
-  // Create a Data context that will be used throughout the app
-  // This makes the data available to all components without prop drilling
-  window.MatchDataContext = matchData;
+  // Extract team names from the metadata
+  const homeTeam = matchData.metadata.match.homeTeam;
+  const awayTeam = matchData.metadata.match.awayTeam;
+
+  // Add COLORS if not provided in the data
+  const COLORS = matchData.COLORS || ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+
+  // Create a utility function to get the chart height if not provided
+  const getChartHeight = matchData.getChartHeight || 
+    ((windowWidth, size) => {
+      if (windowWidth < 480) return size === 'small' ? 140 : 160;
+      if (windowWidth < 640) return size === 'small' ? 160 : 180;
+      if (windowWidth < 768) return size === 'small' ? 180 : 200;
+      return size === 'small' ? 200 : 250;
+    });
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -121,9 +133,11 @@ const Dashboard = () => {
           windowWidth={windowWidth} 
           metadata={matchData.metadata}
           predictedFormations={matchData.predictedFormations}
-          COLORS={matchData.COLORS}
+          COLORS={COLORS}
           tacticalInsights={matchData.tacticalInsights}
           pressureData={matchData.pressureData}
+          homeTeam={homeTeam}
+          awayTeam={awayTeam}
         />
 
         {/* Tactical Analysis Widget */}
@@ -147,28 +161,14 @@ const Dashboard = () => {
         <ExploitAnalysis 
           windowWidth={windowWidth}
           opponentWeaknesses={matchData.opponentWeaknesses}
-          getChartHeight={matchData.getChartHeight || 
-            ((windowWidth, size) => {
-              if (windowWidth < 480) return size === 'small' ? 140 : 160;
-              if (windowWidth < 640) return size === 'small' ? 160 : 180;
-              if (windowWidth < 768) return size === 'small' ? 180 : 200;
-              return size === 'small' ? 200 : 250;
-            })
-          }
+          getChartHeight={getChartHeight}
         />
 
         {/* What-If Analysis Widget */}
         <WhatIfAnalysis 
           windowWidth={windowWidth}
           scenarioAnalysis={matchData.scenarioAnalysis}
-          getChartHeight={matchData.getChartHeight || 
-            ((windowWidth, size) => {
-              if (windowWidth < 480) return size === 'small' ? 140 : 160;
-              if (windowWidth < 640) return size === 'small' ? 160 : 180;
-              if (windowWidth < 768) return size === 'small' ? 180 : 200;
-              return size === 'small' ? 200 : 250;
-            })
-          }
+          getChartHeight={getChartHeight}
         />
       </div>
     </div>

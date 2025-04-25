@@ -7,7 +7,9 @@ const MatchPrediction = ({
   predictedFormations, 
   COLORS, 
   tacticalInsights,
-  pressureData 
+  pressureData,
+  homeTeam,
+  awayTeam
 }) => {
   // Convert win/draw/loss probabilities to pie chart data
   const matchProbabilityData = [
@@ -21,7 +23,7 @@ const MatchPrediction = ({
       <div className="flex items-center mb-2 md:mb-3">
         <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
         <h2 className="text-base md:text-lg font-semibold">
-          AI Match Prediction: {metadata.analysis.winProbability}% Win Probability
+          AI Match Prediction: {metadata.analysis.winProbability}% Win Probability for {homeTeam}
         </h2>
       </div>
       
@@ -54,7 +56,7 @@ const MatchPrediction = ({
         
         <div className="w-full md:w-1/3 px-2 mb-4">
           <div className="bg-gray-50 p-2 md:p-3 rounded-lg h-full">
-            <h3 className="font-semibold mb-2 text-sm">Predicted Opposition Formation</h3>
+            <h3 className="font-semibold mb-2 text-sm">Predicted {awayTeam} Formation</h3>
             <ResponsiveContainer width="100%" height={windowWidth < 480 ? 120 : (windowWidth < 768 ? 150 : 180)}>
               <PieChart>
                 <Pie

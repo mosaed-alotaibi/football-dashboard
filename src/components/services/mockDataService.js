@@ -14,6 +14,7 @@ export const mockTeams = [
     { id: 10, name: 'Everton', logo: '/team-logos/everton.png' },
     { id: 11, name: 'Aston Villa', logo: '/team-logos/aston-villa.png' },
     { id: 12, name: 'Newcastle United', logo: '/team-logos/newcastle.png' },
+    { id: 13, name: 'Ittihad', logo: '/team-logos/ittihad.png' },
   ];
   
   // Mock recent matches data
@@ -52,11 +53,11 @@ export const mockTeams = [
     },
     {
       id: 5,
-      homeTeam: 'Leicester City',
-      awayTeam: 'Aston Villa',
+      homeTeam: 'Ittihad',
+      awayTeam: 'Al Hilal',
       date: 'April 7, 2025',
-      competition: 'Premier League',
-      venue: "King Power Stadium"
+      competition: 'Saudi Pro League',
+      venue: "King Abdullah Sports City"
     },
     {
       id: 6,
@@ -68,7 +69,7 @@ export const mockTeams = [
     }
   ];
   
-  // Complete mock match analysis data based on Data.js structure
+  // Complete mock match analysis data based on expected API response
   export const createMockAnalysisData = (homeTeam, awayTeam) => {
     // Default values that would come from the backend model
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
@@ -79,8 +80,9 @@ export const mockTeams = [
           homeTeam: homeTeam || "Liverpool",
           awayTeam: awayTeam || "Southampton",
           date: "April 14, 2025",
-          competition: "Premier League",
-          venue: awayTeam ? `${awayTeam} Home Stadium` : "St. Mary's Stadium"
+          competition: homeTeam === "Ittihad" ? "Saudi Pro League" : "Premier League",
+          venue: homeTeam === "Ittihad" ? "King Abdullah Sports City" : 
+                 (awayTeam === "Ittihad" ? "King Abdullah Sports City" : `${awayTeam} Home Stadium`)
         },
         analysis: {
           winProbability: 70,
@@ -91,13 +93,13 @@ export const mockTeams = [
         }
       },
       
-      // Team comparison data
+      // Team comparison data with dynamic team names
       teamComparison: [
-        { name: "Possession", team: 57, opponent: 43 },
-        { name: "Shots", team: 13, opponent: 9 },
-        { name: "Shots on Target", team: 8, opponent: 4 },
-        { name: "Corners", team: 11, opponent: 7 },
-        { name: "Fouls", team: 9, opponent: 12 }
+        { name: "Possession", [homeTeam]: 57, [awayTeam]: 43 },
+        { name: "Shots", [homeTeam]: 13, [awayTeam]: 9 },
+        { name: "Shots on Target", [homeTeam]: 8, [awayTeam]: 4 },
+        { name: "Corners", [homeTeam]: 11, [awayTeam]: 7 },
+        { name: "Fouls", [homeTeam]: 9, [awayTeam]: 12 }
       ],
       
       // Pressure data across match segments
@@ -175,9 +177,9 @@ export const mockTeams = [
           `Susceptibility to quick, direct long balls behind the defense against ${awayTeam}.`
         ],
         keyPlayerImpact: [
-          "Off-the-ball movement opened space for overlapping runs.",
-          "Presence in aerial duels crucial to defensive stability.",
-          "Creative outlets from deep positions remain key to attacking success."
+          `${homeTeam === "Liverpool" ? "Mohamed Salah's" : "Star player's"} off-the-ball movement opened space for overlapping runs.`,
+          `${homeTeam === "Liverpool" ? "Van Dijk's" : "Central defender's"} presence in aerial duels crucial to defensive stability.`,
+          `${homeTeam === "Liverpool" ? "Alexander-Arnold" : "Full-back"} remains a creative outlet from deep.`
         ]
       },
       
@@ -186,17 +188,17 @@ export const mockTeams = [
         formationSuggestion: "4-3-3",
         pressingStrategy: `High press on ${awayTeam}'s full-backs to isolate central build-up.`,
         attackingApproach: [
-          "Exploit wide channels with overlapping combinations.",
+          `Exploit wide channels with ${homeTeam === "Liverpool" ? "Robertson and Salah" : "full-backs and wingers"} overlapping combinations.`,
           "Use early switches to bypass compact midfield lines.",
-          "Quick central penetrations through key players in zone 14."
+          `Quick central penetrations through ${homeTeam === "Liverpool" ? "Gakpo or Mac Allister" : "attacking midfielders"} in zone 14.`
         ],
         defensiveApproach: [
           "Anticipate early long balls and second-ball recoveries.",
           `Compactness in the midfield to prevent overloads by ${awayTeam}'s inverted wingers.`,
-          "High line with effective sweeping behind the defense."
+          `High line with ${homeTeam === "Liverpool" ? "Alisson" : "goalkeeper"} sweeping effectively behind the defense.`
         ],
         setPlayStrategies: [
-          "Near-post deliveries targeting central defenders.",
+          `Near-post deliveries targeting ${homeTeam === "Liverpool" ? "Van Dijk and Konaté" : "central defenders"}.`,
           "Short corner routines to pull markers and create cut-back opportunities.",
           "Zonal defensive marking with man-marking on key aerial threats."
         ]
@@ -206,17 +208,17 @@ export const mockTeams = [
       predictedOppositionFormation: {
         formation: "4-4-2",
         likelyStarters: [
-          { position: "GK", player: "Goalkeeper", threatLevel: "Medium" },
-          { position: "RB", player: "Right Back", threatLevel: "High" },
-          { position: "CB", player: "Center Back 1", threatLevel: "High" },
-          { position: "CB", player: "Center Back 2", threatLevel: "Medium" },
-          { position: "LB", player: "Left Back", threatLevel: "Medium" },
-          { position: "RM", player: "Right Midfielder", threatLevel: "Medium" },
-          { position: "CM", player: "Central Midfielder 1", threatLevel: "Very High" },
-          { position: "CM", player: "Central Midfielder 2", threatLevel: "High" },
-          { position: "LM", player: "Left Midfielder", threatLevel: "Medium" },
-          { position: "ST", player: "Striker 1", threatLevel: "High" },
-          { position: "ST", player: "Striker 2", threatLevel: "Medium" }
+          { position: "GK", player: generatePlayerName(awayTeam, "GK"), threatLevel: "Medium" },
+          { position: "RB", player: generatePlayerName(awayTeam, "RB"), threatLevel: "High" },
+          { position: "CB", player: generatePlayerName(awayTeam, "CB1"), threatLevel: "High" },
+          { position: "CB", player: generatePlayerName(awayTeam, "CB2"), threatLevel: "Medium" },
+          { position: "LB", player: generatePlayerName(awayTeam, "LB"), threatLevel: "Medium" },
+          { position: "RM", player: generatePlayerName(awayTeam, "RM"), threatLevel: "Medium" },
+          { position: "CM", player: generatePlayerName(awayTeam, "CM1"), threatLevel: "Very High" },
+          { position: "CM", player: generatePlayerName(awayTeam, "CM2"), threatLevel: "High" },
+          { position: "LM", player: generatePlayerName(awayTeam, "LM"), threatLevel: "Medium" },
+          { position: "ST", player: generatePlayerName(awayTeam, "ST1"), threatLevel: "High" },
+          { position: "ST", player: generatePlayerName(awayTeam, "ST2"), threatLevel: "Medium" }
         ],
         keyTactics: [
           "Compact mid-block to reduce space between lines.",
@@ -236,3 +238,69 @@ export const mockTeams = [
       }
     };
   };
+  
+  // Helper function to generate mock player names based on team and position
+  function generatePlayerName(team, position) {
+    const teamSpecificPlayers = {
+      'Southampton': {
+        'GK': 'Gavin Bazunu',
+        'RB': 'Kyle Walker-Peters',
+        'CB1': 'Jan Bednarek',
+        'CB2': 'Jack Stephens',
+        'LB': 'Romain Perraud',
+        'RM': 'Stuart Armstrong',
+        'CM1': 'James Ward-Prowse',
+        'CM2': 'Romeo Lavia',
+        'LM': 'Moussa Djenepo',
+        'ST1': 'Che Adams',
+        'ST2': 'Adam Armstrong'
+      },
+      'Manchester United': {
+        'GK': 'André Onana',
+        'RB': 'Diogo Dalot',
+        'CB1': 'Harry Maguire',
+        'CB2': 'Lisandro Martínez',
+        'LB': 'Luke Shaw',
+        'RM': 'Antony',
+        'CM1': 'Bruno Fernandes',
+        'CM2': 'Casemiro',
+        'LM': 'Marcus Rashford',
+        'ST1': 'Rasmus Højlund',
+        'ST2': 'Alejandro Garnacho'
+      },
+      'Ittihad': {
+        'GK': 'Marcelo Grohe',
+        'RB': 'Ahmed Sharahili',
+        'CB1': 'Ahmed Hegazi',
+        'CB2': 'Omar Hawsawi',
+        'LB': 'Muhannad Al-Shanqeeti',
+        'RM': 'Fabinho',
+        'CM1': 'N\'Golo Kanté',
+        'CM2': 'Jota',
+        'LM': 'Romarinho',
+        'ST1': 'Karim Benzema',
+        'ST2': 'Abderrazak Hamdallah'
+      }
+    };
+    
+    if (teamSpecificPlayers[team] && teamSpecificPlayers[team][position]) {
+      return teamSpecificPlayers[team][position];
+    }
+    
+    // Generic placeholder names if specific team data isn't available
+    const positionNames = {
+      'GK': 'Goalkeeper',
+      'RB': 'Right Back',
+      'CB1': 'Center Back 1',
+      'CB2': 'Center Back 2',
+      'LB': 'Left Back',
+      'RM': 'Right Midfielder',
+      'CM1': 'Central Midfielder 1',
+      'CM2': 'Central Midfielder 2',
+      'LM': 'Left Midfielder',
+      'ST1': 'Striker 1',
+      'ST2': 'Striker 2'
+    };
+    
+    return positionNames[position] || `${position} Player`;
+  }

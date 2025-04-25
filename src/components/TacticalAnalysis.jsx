@@ -4,12 +4,45 @@ import {
   Tooltip, Legend, ResponsiveContainer, Radar, RadarChart,
   PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
-import { 
-  teamComparison, pressureData, passingNetworkData, radarData, tacticalInsights
-} from './Data';
 
-const TacticalAnalysis = ({ windowWidth }) => {
+const TacticalAnalysis = ({ 
+  windowWidth, 
+  teamComparison, 
+  pressureData, 
+  passingNetworkData, 
+  radarData, 
+  tacticalInsights 
+}) => {
   const [activeTab, setActiveTab] = useState('overview');
+  
+  // Get team names from the first comparison item
+  const getTeamNames = () => {
+    if (!teamComparison || teamComparison.length === 0) return { homeTeam: 'Team', awayTeam: 'Opponent' };
+    
+    const firstItem = teamComparison[0];
+    // Filter out the 'name' key and get the remaining keys (should be team names)
+    const teamKeys = Object.keys(firstItem).filter(key => key !== 'name');
+    
+    return {
+      homeTeam: teamKeys[0] || 'Team',
+      awayTeam: teamKeys[1] || 'Opponent'
+    };
+  };
+  
+  const { homeTeam, awayTeam } = getTeamNames();
+  
+  // Transform data for bar chart to work with the dynamic team names
+  const transformTeamComparison = () => {
+    if (!teamComparison) return [];
+    
+    return teamComparison.map(item => ({
+      name: item.name,
+      team: item[homeTeam],
+      opponent: item[awayTeam]
+    }));
+  };
+  
+  const transformedComparison = transformTeamComparison();
 
   return (
     <div className="bg-white rounded-lg shadow-md p-3 md:p-4 mb-4">
@@ -54,7 +87,7 @@ const TacticalAnalysis = ({ windowWidth }) => {
         {activeTab === 'overview' && (
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={teamComparison}
+              data={transformedComparison}
               margin={{ 
                 top: windowWidth < 480 ? 5 : (windowWidth < 640 ? 10 : 20), 
                 right: windowWidth < 480 ? 10 : (windowWidth < 640 ? 15 : 30), 
@@ -67,8 +100,8 @@ const TacticalAnalysis = ({ windowWidth }) => {
               <YAxis tick={{fontSize: windowWidth < 480 ? 8 : (windowWidth < 640 ? 10 : 12)}} />
               <Tooltip />
               <Legend wrapperStyle={{fontSize: windowWidth < 480 ? 8 : (windowWidth < 640 ? 10 : 12)}} />
-              <Bar dataKey="team" name="Our Team" fill="#8884d8" />
-              <Bar dataKey="opponent" name="Opponent" fill="#82ca9d" />
+              <Bar dataKey="team" name={homeTeam} fill="#8884d8" />
+              <Bar dataKey="opponent" name={awayTeam} fill="#82ca9d" />
             </BarChart>
           </ResponsiveContainer>
         )}
@@ -126,8 +159,8 @@ const TacticalAnalysis = ({ windowWidth }) => {
               <PolarGrid />
               <PolarAngleAxis dataKey="subject" tick={{fontSize: windowWidth < 480 ? 8 : (windowWidth < 640 ? 10 : 12)}} />
               <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{fontSize: windowWidth < 480 ? 8 : (windowWidth < 640 ? 10 : 12)}} />
-              <Radar name="Our Team" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-              <Radar name="Opponent" dataKey="B" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
+              <Radar name={homeTeam} dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+              <Radar name={awayTeam} dataKey="B" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
               <Legend wrapperStyle={{fontSize: windowWidth < 480 ? 8 : (windowWidth < 640 ? 10 : 12)}} />
               <Tooltip />
             </RadarChart>

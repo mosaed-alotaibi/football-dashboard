@@ -1,0 +1,131 @@
+{
+    "metadata": {
+      "match": {
+        "homeTeam": "Ittihad",
+        "awayTeam": "Al Nassr", 
+        "date": "April 28, 2025", 
+        "competition": "Saudi Pro League", 
+        "venue": "King Abdullah Sports City" 
+      },
+      "analysis": {
+        "winProbability": 65, 
+        "drawProbability": 25, 
+        "lossProbability": 10, 
+        "timestamp": "2025-04-25T18:00:00Z", 
+        "version": "1.0"
+      }
+    },
+    "teamComparison": [
+      { "name": "Possession", "Ittihad": 58, "Al Nassr": 42 }, 
+      { "name": "Shots", "Ittihad": 14, "Al Nassr": 9 }, 
+      { "name": "Shots on Target", "Ittihad": 7, "Al Nassr": 4 }, 
+      { "name": "Corners", "Ittihad": 8, "Al Nassr": 5 }, 
+      { "name": "Fouls", "Ittihad": 10, "Al Nassr": 13 } 
+    ],
+    "pressureData": [
+      { "minute": "0-15", "intensity": 78, "recoveries": 6 },
+      { "minute": "16-30", "intensity": 70, "recoveries": 5 },
+      { "minute": "31-45", "intensity": 75, "recoveries": 7 },
+      { "minute": "46-60", "intensity": 72, "recoveries": 5 },
+      { "minute": "61-75", "intensity": 80, "recoveries": 8 },
+      { "minute": "76-90", "intensity": 68, "recoveries": 4 }
+    ],
+    "passingNetworkData": [
+      { "name": "GK", "passes": 28, "accuracy": 92 },
+      { "name": "RB", "passes": 62, "accuracy": 86 },
+      { "name": "CB1", "passes": 70, "accuracy": 93 },
+      { "name": "CB2", "passes": 65, "accuracy": 91 },
+      { "name": "LB", "passes": 68, "accuracy": 89 },
+      { "name": "CDM", "passes": 75, "accuracy": 90 },
+      { "name": "CM1", "passes": 72, "accuracy": 88 },
+      { "name": "CM2", "passes": 64, "accuracy": 87 },
+      { "name": "RW", "passes": 45, "accuracy": 80 },
+      { "name": "ST", "passes": 40, "accuracy": 78 },
+      { "name": "LW", "passes": 48, "accuracy": 82 }
+    ],
+    "opponentWeaknesses": [
+      { "name": "High Press", "value": 82 },
+      { "name": "Defending Wide Areas", "value": 74 },
+      { "name": "Aerial Duels", "value": 68 },
+      { "name": "Transition Defense", "value": 72 },
+      { "name": "Defending Set Pieces", "value": 70 }
+    ],
+    "predictedFormations": [
+      { "name": "4-2-3-1", "probability": 60 },
+      { "name": "4-3-3", "probability": 30 },
+      { "name": "3-4-3", "probability": 10 }
+    ],
+    "radarData": [
+      { "subject": "Attack", "A": 85, "B": 78, "fullMark": 100 },
+      { "subject": "Defense", "A": 80, "B": 75, "fullMark": 100 },
+      { "subject": "Possession", "A": 86, "B": 70, "fullMark": 100 },
+      { "subject": "Physical", "A": 76, "B": 78, "fullMark": 100 },
+      { "subject": "Set Pieces", "A": 74, "B": 66, "fullMark": 100 },
+      { "subject": "Counter", "A": 72, "B": 69, "fullMark": 100 }
+    ],
+    "scenarioAnalysis": [
+      { "scenario": "High Press", "winProb": 73, "drawProb": 19, "lossProb": 8 },
+      { "scenario": "Low Block", "winProb": 62, "drawProb": 25, "lossProb": 13 },
+      { "scenario": "Possession", "winProb": 76, "drawProb": 16, "lossProb": 8 },
+      { "scenario": "Counter Attack", "winProb": 60, "drawProb": 22, "lossProb": 18 }
+    ],
+    "tacticalInsights": {
+      "strengths": [
+        "Ittihad maintained 58% possession with controlled midfield dominance through Kanté and Fabinho.",
+        "Attacking overloads from both wings led to 8 corners and multiple crossing opportunities.",
+        "Press intensity peaked between 61-75 minutes, creating 8 opposition turnovers."
+      ],
+      "weaknesses": [
+        "Occasional gaps during transition after losing midfield control in central areas.",
+        "Set piece defending still inconsistent under pressure against taller opposition players.",
+        "Susceptibility to quick, direct long balls behind the defense against Al Nassr's pacey attackers."
+      ],
+      "keyPlayerImpact": [
+        "Benzema's off-the-ball movement opened space for overlapping runs from fullbacks.",
+        "Hegazi's presence in aerial duels crucial to defensive stability against crosses.",
+        "Romarinho remains a creative outlet from deep positions with pinpoint passing."
+      ]
+    },
+    "tacticalRecommendations": {
+      "formationSuggestion": "4-3-3",
+      "pressingStrategy": "High press on Al Nassr's full-backs to isolate central build-up and force long balls.",
+      "attackingApproach": [
+        "Exploit wide channels with overlapping combinations between Romarinho and fullbacks.",
+        "Use early switches of play to bypass Al Nassr's compact midfield lines.",
+        "Quick central penetrations through Kanté's forward runs into zone 14."
+      ],
+      "defensiveApproach": [
+        "Anticipate early long balls and prepare for second-ball recoveries with Fabinho.",
+        "Maintain compactness in the midfield to prevent overloads by Al Nassr's inverted wingers.",
+        "High defensive line with Grohe sweeping effectively behind for through balls."
+      ],
+      "setPlayStrategies": [
+        "Near-post deliveries targeting Hegazi and Hawsawi for headed opportunities.",
+        "Short corner routines to pull markers and create cut-back opportunities for Benzema.",
+        "Zonal defensive marking with man-marking on Cristiano Ronaldo during opposition set-pieces."
+      ]
+    },
+    "predictedOppositionFormation": {
+      "formation": "4-2-3-1",
+      "likelyStarters": [
+        { "position": "GK", "player": "David Ospina", "threatLevel": "Medium" },
+        { "position": "RB", "player": "Sultan Al-Ghannam", "threatLevel": "Medium" },
+        { "position": "CB", "player": "Aymeric Laporte", "threatLevel": "High" },
+        { "position": "CB", "player": "Ali Al-Bulaihi", "threatLevel": "Medium" },
+        { "position": "LB", "player": "Alex Telles", "threatLevel": "High" },
+        { "position": "CDM", "player": "Marcelo Brozović", "threatLevel": "High" },
+        { "position": "CDM", "player": "Seko Fofana", "threatLevel": "High" },
+        { "position": "CAM", "player": "Anderson Talisca", "threatLevel": "Very High" },
+        { "position": "RW", "player": "Sadio Mané", "threatLevel": "Very High" },
+        { "position": "LW", "player": "Otávio", "threatLevel": "Medium" },
+        { "position": "ST", "player": "Cristiano Ronaldo", "threatLevel": "Very High" }
+      ],
+      "keyTactics": [
+        "Compact mid-block to reduce space between lines with quick transitions.",
+        "Focus on wide attacks through Mané and Otávio with supporting fullbacks.",
+        "Set-piece threat through Talisca's deliveries targeting Ronaldo and Laporte.",
+        "Quick counter-attacks utilizing Ronaldo's positioning and Mané's pace.",
+        "Use of diagonal long balls from Brozović to switch play and stretch defense."
+      ]
+    }
+  }
