@@ -59,10 +59,10 @@ const Dashboard = () => {
   // Show loading state
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <div className="text-center">
-          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Generating match analysis...</p>
+      <div className="flex justify-center items-center min-h-screen" style={{ backgroundColor: 'var(--color-neutral-100)' }}>
+        <div className="text-center animate-fade-in">
+          <div className="loader loader-lg mx-auto mb-4"></div>
+          <p style={{ color: 'var(--color-neutral-600)' }}>Generating match analysis...</p>
         </div>
       </div>
     );
@@ -71,16 +71,20 @@ const Dashboard = () => {
   // Show error state
   if (error) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <div className="bg-white p-6 rounded-lg shadow-md max-w-md">
-          <h2 className="text-xl font-semibold text-red-600 mb-2">Error</h2>
-          <p className="text-gray-700 mb-4">{error}</p>
-          <button
-            onClick={() => navigate('/')}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-200"
-          >
-            Return to Home
-          </button>
+      <div className="flex justify-center items-center min-h-screen" style={{ backgroundColor: 'var(--color-neutral-100)' }}>
+        <div className="card max-w-md mx-auto animate-slide-up">
+          <div className="card-header">
+            <h2 className="text-xl font-semibold" style={{ color: 'var(--color-error)' }}>Error</h2>
+          </div>
+          <div className="card-body">
+            <p className="mb-4" style={{ color: 'var(--color-neutral-700)' }}>{error}</p>
+            <button
+              onClick={() => navigate('/')}
+              className="btn btn-primary"
+            >
+              Return to Home
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -108,13 +112,14 @@ const Dashboard = () => {
     });
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-neutral-100)' }}>
       {/* Back button */}
-      <div className="bg-white p-2 shadow-sm">
-        <div className="container mx-auto">
+      <div className="bg-white shadow-sm">
+        <div className="container mx-auto p-2">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center text-blue-600 hover:text-blue-800"
+            className="btn btn-sm btn-outline flex items-center"
+            style={{ color: 'var(--color-primary-600)' }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -127,7 +132,7 @@ const Dashboard = () => {
       {/* Header Component */}
       <Header metadata={matchData.metadata} />
 
-      <div className="container mx-auto p-3 md:p-4">
+      <div className="container mx-auto p-4 md:p-6 animate-slide-up">
         {/* Match Prediction Widget */}
         <MatchPrediction 
           windowWidth={windowWidth} 
