@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { fetchTeams, fetchRecentMatches, uploadFilesAndGetAnalysis } from './services/apiService';
 import { downloadSampleFile } from './services/FileProcessingUtil';
 import Header from './Header';
+import { useLanguage } from './LanguageContext';
 
 const Home = () => {
+  const { t } = useLanguage();
+  
   // State for teams and recent matches
   const [teams, setTeams] = useState([]);
   const [recentMatches, setRecentMatches] = useState([]);
@@ -116,20 +119,20 @@ const Home = () => {
       <div className="flex justify-center items-center min-h-screen" style={{ backgroundColor: 'var(--color-neutral-100)' }}>
         <div className="text-center animate-fade-in">
           <div className="loader loader-lg mx-auto mb-4"></div>
-          <p style={{ color: 'var(--color-neutral-600)' }}>Loading SCAI League data...</p>
+          <p style={{ color: 'var(--color-neutral-600)' }}>{t('loading')}</p>
         </div>
       </div>
     );
   }
 
-  // Create a mock metadata object for the Header component
+  // Create a metadata object for the Header component
   const headerMetadata = {
     match: {
-      competition: 'Football Analysis Platform',
-      homeTeam: 'Create New',
-      awayTeam: 'Analysis',
+      competition: t('footballAnalysisPlatform'),
+      homeTeam: t('createNewMatchAnalysis').split(' ')[0], // "Create"
+      awayTeam: t('createNewMatchAnalysis').split(' ').slice(1).join(' '), // "New Match Analysis"
       date: new Date().toLocaleDateString(),
-      venue: 'AI-Powered Insights'
+      venue: t('aiPoweredInsights')
     }
   };
 
@@ -149,13 +152,13 @@ const Home = () => {
         {/* Team Selection Form */}
         <div className="card mb-6 hover:shadow-xl transition-all">
           <div className="card-header bg-gradient-to-r from-primary-600 to-primary-700 text-white">
-            <h2 className="text-lg md:text-xl font-semibold">Create New Match Analysis</h2>
+            <h2 className="text-lg md:text-xl font-semibold">{t('createNewMatchAnalysis')}</h2>
           </div>
           <div className="card-body">
             <form onSubmit={handleAnalyzeMatch}>
               <div className="flex flex-wrap -mx-2 mb-4">
                 <div className="w-full md:w-1/2 px-2 mb-4 md:mb-0">
-                  <label htmlFor="homeTeam" className="form-label">Home Team</label>
+                  <label htmlFor="homeTeam" className="form-label">{t('homeTeam')}</label>
                   <select 
                     id="homeTeam"
                     className="form-select focus-ring"
@@ -163,7 +166,7 @@ const Home = () => {
                     onChange={(e) => handleTeamChange(e, 'homeTeam')}
                     required
                   >
-                    <option value="">Select Home Team</option>
+                    <option value="">{t('selectHomeTeam')}</option>
                     {teams.map(team => (
                       <option key={`home-${team.id}`} value={team.name}>
                         {team.name}
@@ -172,7 +175,7 @@ const Home = () => {
                   </select>
                 </div>
                 <div className="w-full md:w-1/2 px-2">
-                  <label htmlFor="awayTeam" className="form-label">Away Team</label>
+                  <label htmlFor="awayTeam" className="form-label">{t('awayTeam')}</label>
                   <select 
                     id="awayTeam"
                     className="form-select focus-ring"
@@ -180,7 +183,7 @@ const Home = () => {
                     onChange={(e) => handleTeamChange(e, 'awayTeam')}
                     required
                   >
-                    <option value="">Select Away Team</option>
+                    <option value="">{t('selectAwayTeam')}</option>
                     {teams.map(team => (
                       <option key={`away-${team.id}`} value={team.name}>
                         {team.name}
@@ -193,7 +196,7 @@ const Home = () => {
               {/* File upload section */}
               <div className="mb-4">
                 <div className="flex flex-wrap justify-between items-center mb-3">
-                  <h3 className="text-base font-medium" style={{ color: 'var(--color-neutral-700)' }}>Upload Match Data Files</h3>
+                  <h3 className="text-base font-medium" style={{ color: 'var(--color-neutral-700)' }}>{t('uploadMatchDataFiles')}</h3>
                   <button
                     type="button"
                     onClick={handleDownloadSample}
@@ -203,12 +206,12 @@ const Home = () => {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                     </svg>
-                    Download Sample File
+                    {t('downloadSampleFile')}
                   </button>
                 </div>
                 <div className="flex flex-wrap -mx-2">
                   <div className="w-full md:w-1/2 px-2 mb-4">
-                    <label htmlFor="teamStatsFile" className="form-label">Team Statistics File</label>
+                    <label htmlFor="teamStatsFile" className="form-label">{t('teamStatisticsFile')}</label>
                     <div className="file-upload hover:border-primary-400 hover:bg-primary-50 transition-colors">
                       <input
                         type="file"
@@ -224,15 +227,15 @@ const Home = () => {
                         </svg>
                       </div>
                       <div className="file-upload-text font-medium" style={{ color: selectedFiles.teamStatsFile ? 'var(--color-primary-600)' : 'var(--color-neutral-600)' }}>
-                        {selectedFiles.teamStatsFile ? selectedFiles.teamStatsFile.name : 'Click to upload team statistics file'}
+                        {selectedFiles.teamStatsFile ? selectedFiles.teamStatsFile.name : t('clickToUpload') + ' ' + t('teamStatisticsFile').toLowerCase()}
                       </div>
                       <div className="file-upload-hint">
-                        Accepts .json, .txt, .csv
+                        {t('accepts')} .json, .txt, .csv
                       </div>
                     </div>
                   </div>
                   <div className="w-full md:w-1/2 px-2 mb-4">
-                    <label htmlFor="matchAnalysisFile" className="form-label">Match Analysis File</label>
+                    <label htmlFor="matchAnalysisFile" className="form-label">{t('matchAnalysisFile')}</label>
                     <div className="file-upload hover:border-primary-400 hover:bg-primary-50 transition-colors">
                       <input
                         type="file"
@@ -248,22 +251,22 @@ const Home = () => {
                         </svg>
                       </div>
                       <div className="file-upload-text font-medium" style={{ color: selectedFiles.matchAnalysisFile ? 'var(--color-primary-600)' : 'var(--color-neutral-600)' }}>
-                        {selectedFiles.matchAnalysisFile ? selectedFiles.matchAnalysisFile.name : 'Click to upload match analysis file'}
+                        {selectedFiles.matchAnalysisFile ? selectedFiles.matchAnalysisFile.name : t('clickToUpload') + ' ' + t('matchAnalysisFile').toLowerCase()}
                       </div>
                       <div className="file-upload-hint">
-                        Accepts .json, .txt, .csv
+                        {t('accepts')} .json, .txt, .csv
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="alert alert-info bg-blue-50 border-blue-200 text-blue-800">
-                  <p className="font-medium mb-1">File Format Information</p>
-                  <p>The analysis requires two JSON files:</p>
+                  <p className="font-medium mb-1">{t('fileFormatInfo')}</p>
+                  <p>{t('theAnalysisRequires')}</p>
                   <ol className="list-decimal ml-4 mt-1 space-y-1">
-                    <li>Team Statistics: Contains player and team performance data</li>
-                    <li>Match Analysis: Contains tactical and strategic information</li>
+                    <li>{t('teamStatisticsContains')}</li>
+                    <li>{t('matchAnalysisContains')}</li>
                   </ol>
-                  <p className="mt-1">Use the "Download Sample File" button above to get a template of the expected format.</p>
+                  <p className="mt-1">{t('useTheDownloadButton')}</p>
                 </div>
               </div>
               
@@ -276,14 +279,14 @@ const Home = () => {
                   {uploading ? (
                     <>
                       <div className="loader loader-sm mr-2"></div>
-                      Processing Files...
+                      {t('processingFiles')}
                     </>
                   ) : (
                     <>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                       </svg>
-                      Generate Match Analysis
+                      {t('generateMatchAnalysis')}
                     </>
                   )}
                 </button>
@@ -295,11 +298,11 @@ const Home = () => {
         {/* Recent Matches */}
         <div className="card hover:shadow-xl transition-all">
           <div className="card-header bg-gradient-to-r from-secondary-600 to-secondary-700 text-white">
-            <h2 className="text-lg md:text-xl font-semibold">Recent Matches</h2>
+            <h2 className="text-lg md:text-xl font-semibold">{t('recentMatches')}</h2>
           </div>
           <div className="card-body">
             {recentMatches.length === 0 ? (
-              <p className="text-center py-4" style={{ color: 'var(--color-neutral-500)' }}>No recent matches available</p>
+              <p className="text-center py-4" style={{ color: 'var(--color-neutral-500)' }}>{t('noRecentMatches')}</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {recentMatches.map((match) => (
@@ -321,7 +324,7 @@ const Home = () => {
                         <span className="team-name">{match.homeTeam}</span>
                       </div>
                       <div className="match-card-vs">
-                        <span className="badge badge-primary shadow-sm">vs</span>
+                        <span className="badge badge-primary shadow-sm">{t('vs')}</span>
                       </div>
                       <div className="match-card-team">
                         <div className="team-logo shadow-md bg-secondary-50">
@@ -333,7 +336,7 @@ const Home = () => {
                       </div>
                     </div>
                     <div className="match-card-footer text-primary-600 font-medium">
-                      View Analysis →
+                      {t('viewAnalysis')} →
                     </div>
                   </div>
                 ))}

@@ -1,13 +1,17 @@
 import React from 'react';
+import { useLanguage } from './LanguageContext';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Header = ({ metadata }) => {
+  const { t } = useLanguage();
+  
   // Add null check for metadata
   const matchInfo = metadata && metadata.match ? metadata.match : {
-    competition: 'Football League',
-    homeTeam: 'Home Team',
-    awayTeam: 'Away Team',
-    date: 'Match Date',
-    venue: 'Venue'
+    competition: t('footballAnalysisPlatform'),
+    homeTeam: t('createNewMatchAnalysis').split(' ')[0], // "Create"
+    awayTeam: t('createNewMatchAnalysis').split(' ').slice(1).join(' '), // "New Match Analysis"
+    date: new Date().toLocaleDateString(),
+    venue: t('aiPoweredInsights')
   };
 
   return (
@@ -19,7 +23,7 @@ const Header = ({ metadata }) => {
             <div className="app-logo mr-3 shadow-lg">
               <img 
                 src="/logo.png" 
-                alt="SCAI League" 
+                alt={t('appName')} 
                 className="w-8 h-8"
                 onError={(e) => {
                   e.target.onerror = null;
@@ -28,15 +32,20 @@ const Header = ({ metadata }) => {
               />
             </div>
             <div>
-              <h1 className="text-xl md:text-2xl font-bold tracking-tight">SCAI League</h1>
-              <p className="text-xs md:text-sm opacity-90 font-medium">Tactical Analysis AI Assistant</p>
+              <h1 className="text-xl md:text-2xl font-bold tracking-tight">{t('appName')}</h1>
+              <p className="text-xs md:text-sm opacity-90 font-medium">{t('appTagline')}</p>
             </div>
           </div>
           
-          <div className="flex items-center text-right">
+          <div className="flex items-center">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+          </div>
+          
+          <div className="flex items-center text-right mt-2 md:mt-0">
             <div className="text-right">
               <div className="badge badge-primary mb-1 shadow-sm">{matchInfo.competition}</div>
-              <p className="text-sm md:text-base font-bold mb-1 tracking-tight">{matchInfo.homeTeam} vs {matchInfo.awayTeam}</p>
+              <p className="text-sm md:text-base font-bold mb-1 tracking-tight">{matchInfo.homeTeam} {t('vs')} {matchInfo.awayTeam}</p>
               <p className="text-xs opacity-90 font-medium">{matchInfo.date} | {matchInfo.venue}</p>
             </div>
           </div>

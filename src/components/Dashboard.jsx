@@ -9,8 +9,10 @@ import TacticalRecommendations from './TacticalRecommendations';
 import ExploitAnalysis from './ExploitAnalysis';
 import WhatIfAnalysis from './WhatIfAnalysis';
 import { getMatchAnalysis } from './services/apiService';
+import { useLanguage } from './LanguageContext';
 
 const Dashboard = () => {
+  const { t } = useLanguage();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [matchData, setMatchData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -62,7 +64,7 @@ const Dashboard = () => {
       <div className="flex justify-center items-center min-h-screen" style={{ backgroundColor: 'var(--color-neutral-100)' }}>
         <div className="text-center animate-fade-in">
           <div className="loader loader-lg mx-auto mb-4"></div>
-          <p style={{ color: 'var(--color-neutral-600)' }}>Generating match analysis...</p>
+          <p style={{ color: 'var(--color-neutral-600)' }}>{t('generatingAnalysis')}</p>
         </div>
       </div>
     );
@@ -74,7 +76,7 @@ const Dashboard = () => {
       <div className="flex justify-center items-center min-h-screen" style={{ backgroundColor: 'var(--color-neutral-100)' }}>
         <div className="card max-w-md mx-auto animate-slide-up">
           <div className="card-header">
-            <h2 className="text-xl font-semibold" style={{ color: 'var(--color-error)' }}>Error</h2>
+            <h2 className="text-xl font-semibold" style={{ color: 'var(--color-error)' }}>{t('error')}</h2>
           </div>
           <div className="card-body">
             <p className="mb-4" style={{ color: 'var(--color-neutral-700)' }}>{error}</p>
@@ -82,7 +84,7 @@ const Dashboard = () => {
               onClick={() => navigate('/')}
               className="btn btn-primary"
             >
-              Return to Home
+              {t('returnToHome')}
             </button>
           </div>
         </div>
@@ -124,7 +126,7 @@ const Dashboard = () => {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Back to Home
+            {t('backToHome')}
           </button>
         </div>
       </div>

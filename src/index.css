@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
 
 :root {
   /* Primary colors */
@@ -61,17 +62,63 @@
   --radius-2xl: 1rem;
   --radius-3xl: 1.5rem;
   --radius-full: 9999px;
+  
+  /* Font families */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-arabic: 'Tajawal', var(--font-sans);
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--color-neutral-100);
   color: var(--color-neutral-900);
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+/* RTL Support */
+[dir="rtl"] body {
+  font-family: var(--font-arabic);
+  text-align: right;
+}
+
+[dir="rtl"] .ml-1 { margin-left: 0; margin-right: 0.25rem; }
+[dir="rtl"] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
+[dir="rtl"] .ml-3 { margin-left: 0; margin-right: 0.75rem; }
+[dir="rtl"] .ml-4 { margin-left: 0; margin-right: 1rem; }
+
+[dir="rtl"] .mr-1 { margin-right: 0; margin-left: 0.25rem; }
+[dir="rtl"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
+[dir="rtl"] .mr-3 { margin-right: 0; margin-left: 0.75rem; }
+[dir="rtl"] .mr-4 { margin-right: 0; margin-left: 1rem; }
+
+[dir="rtl"] .pl-1 { padding-left: 0; padding-right: 0.25rem; }
+[dir="rtl"] .pl-2 { padding-left: 0; padding-right: 0.5rem; }
+[dir="rtl"] .pl-3 { padding-left: 0; padding-right: 0.75rem; }
+[dir="rtl"] .pl-4 { padding-left: 0; padding-right: 1rem; }
+
+[dir="rtl"] .pr-1 { padding-right: 0; padding-left: 0.25rem; }
+[dir="rtl"] .pr-2 { padding-right: 0; padding-left: 0.5rem; }
+[dir="rtl"] .pr-3 { padding-right: 0; padding-left: 0.75rem; }
+[dir="rtl"] .pr-4 { padding-right: 0; padding-left: 1rem; }
+
+[dir="rtl"] .text-left { text-align: right; }
+[dir="rtl"] .text-right { text-align: left; }
+
+[dir="rtl"] .space-x-1 > * + * { margin-left: 0; margin-right: 0.25rem; }
+[dir="rtl"] .space-x-2 > * + * { margin-left: 0; margin-right: 0.5rem; }
+[dir="rtl"] .space-x-3 > * + * { margin-left: 0; margin-right: 0.75rem; }
+[dir="rtl"] .space-x-4 > * + * { margin-left: 0; margin-right: 1rem; }
+
+/* Adjust font size for mobile */
+@media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
 }
 
 code {
@@ -221,4 +268,74 @@ code {
 .focus-ring:focus-visible {
   outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  /* Adjust card padding for mobile */
+  .card-body {
+    padding: 1rem !important;
+  }
+  
+  .card-header {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  /* Adjust spacing for mobile */
+  .mb-6 {
+    margin-bottom: 1rem !important;
+  }
+  
+  /* Make buttons more tappable on mobile */
+  .btn {
+    padding: 0.625rem 1rem !important;
+    min-height: 44px !important; /* Minimum touch target size */
+  }
+  
+  /* Adjust form elements for mobile */
+  .form-control, .form-select {
+    padding: 0.625rem 0.75rem !important;
+    min-height: 44px !important;
+  }
+  
+  /* Improve table scrolling on mobile */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Adjust file upload area for mobile */
+  .file-upload {
+    padding: 1rem !important;
+  }
+  
+  /* Ensure proper touch targets */
+  a, button, input, select, textarea {
+    touch-action: manipulation;
+  }
+}
+
+/* Language switcher styles */
+.language-switcher {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--color-neutral-100);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.language-switcher:hover {
+  background-color: var(--color-neutral-200);
+}
+
+.language-switcher-icon {
+  margin-right: 0.25rem;
+}
+
+[dir="rtl"] .language-switcher-icon {
+  margin-right: 0;
+  margin-left: 0.25rem;
 }
