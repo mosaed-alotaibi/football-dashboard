@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SCAI League",
+  "name": "SCAI League - Football Analysis Dashboard",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,22 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#4338ca",
+  "background_color": "#f1f5f9",
+  "orientation": "portrait-primary",
+  "categories": ["sports", "analytics", "football"],
+  "description": "AI-powered football tactical analysis and match prediction dashboard",
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Create New Analysis",
+      "url": "/",
+      "description": "Create a new match analysis"
+    },
+    {
+      "name": "Dashboard",
+      "url": "/dashboard",
+      "description": "View match analysis dashboard"
+    }
+  ]
 }
